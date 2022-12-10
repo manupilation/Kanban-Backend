@@ -7,6 +7,13 @@ class DataService {
 
     return data;
   }
+
+  async getData(id) {
+    const dbdata = new DataModel;
+    const data = await dbdata.getData(id);
+
+    return data;
+  }
 }
 
 export default DataService;

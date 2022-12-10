@@ -12,6 +12,12 @@ class DataModel {
 
     return userData;
   }
+
+  async getData(id) {
+    const data = await User.findById(id);
+
+    return data;
+  }
 }
 
 export default DataModel;
