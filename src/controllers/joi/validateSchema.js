@@ -9,7 +9,7 @@ const defineCodeError = (errorName) => {
 
 const validationSchema = (schema, body) => {
   const { error } = schema.validate(body);
-  
+
   if (error) {
     const newError = new Error();
     newError.name = defineCodeError(error.details[0].type);
