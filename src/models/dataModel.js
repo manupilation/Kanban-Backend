@@ -18,6 +18,17 @@ class DataModel {
 
     return data;
   }
+
+  async login(email) {
+    const data = await User.findOne({ email });
+
+    return {
+      user: data.user,
+      id: data._id.toString(),
+      email: data.email,
+      password: data.password,
+    };
+  }
 }
 
 export default DataModel;
