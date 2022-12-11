@@ -48,6 +48,14 @@ class DataService {
       throw err;
     }
   }
+
+  async addTask(token, body) {
+    const connectDb = new DataModel();
+    const decodeToken = JWTMethods.decodeToken(token);
+    const add = connectDb.addTask(decodeToken.id, body);
+
+    return add;
+  }
 }
 
 export default DataService;

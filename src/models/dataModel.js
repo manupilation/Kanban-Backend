@@ -35,6 +35,17 @@ class DataModel {
       password: data.password,
     };
   }
+
+  async addTask(id, task) {
+    const add = await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { tasks: task} },
+    );
+
+    add.save();
+
+    return add;
+  }
 }
 
 export default DataModel;
