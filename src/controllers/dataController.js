@@ -41,12 +41,20 @@ class DataController {
     }
   }
 
-  async addTask(req, res) {
-    const { authorization } = req.headers;
-    const connectDb = new DataService();
-    const add = connectDb.addTask(authorization, req.body);
+  async addTask(req, res, next) {
+    try {
+      const { authorization } = req.headers;
 
-    res.status(201).json(add);
+      if(!authorization) {
+        authorizationError();
+      }
+      const connectDb = new DataService();
+      const add = await connectDb.addTask(authorization, req.body);
+
+      res.status(201).json(add);
+    } catch(err) {
+      next(err);
+    }
   }
 
   async deleteTask(req, res) {

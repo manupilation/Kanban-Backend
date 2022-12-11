@@ -4,6 +4,7 @@ import validationSchema from "../controllers/joi/validateSchema.js";
 import userSchema from "../controllers/joi/dataUser.js";
 import { loginErrorPassword } from "../utils/loginError.js";
 import JWTMethods from "../utils/jwt.js";
+import taskSchema from "../controllers/joi/task.js";
 
 class DataService {
   async setUser({user, email, password, tasks}) {
@@ -52,9 +53,15 @@ class DataService {
   async addTask(token, body) {
     const connectDb = new DataModel();
     const decodeToken = JWTMethods.decodeToken(token);
-    const add = connectDb.addTask(decodeToken.id, body);
+    try {
+      validationSchema(taskSchema, body);
+      const add = await connectDb.addTask(decodeToken.id, body);
 
-    return add;
+      return add;
+    } catch(err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async deleteTask(token, taskId) {
