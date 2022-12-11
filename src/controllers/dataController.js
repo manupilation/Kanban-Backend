@@ -16,8 +16,8 @@ class DataController {
 
 
   async getData(req, res) {
-    const { id } = req.body;
-    const dbdata = await new DataService().getData(id);
+    const authToken = req.headers.authorization;
+    const dbdata = await new DataService().getData(authToken);
 
     res.status(200).json(dbdata);
   }

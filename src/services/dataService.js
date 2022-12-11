@@ -21,9 +21,10 @@ class DataService {
     }
   }
 
-  async getData(id) {
+  async getData(token) {
     const dbdata = new DataModel();
-    const data = await dbdata.getData(id);
+    const decodeToken = JWTMethods.decodeToken(token);
+    const data = await dbdata.getData(decodeToken.id);
 
     return data;
   }

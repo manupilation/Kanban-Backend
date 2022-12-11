@@ -16,7 +16,13 @@ class DataModel {
   async getData(id) {
     const data = await User.findById(id);
 
-    return data;
+    if(data) return {
+      user: data.user,
+      id: data._id.toString(),
+      tasks: data.tasks,
+    };
+
+    return null;
   }
 
   async login(email) {
