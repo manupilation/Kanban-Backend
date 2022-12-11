@@ -56,6 +56,14 @@ class DataService {
 
     return add;
   }
+
+  async deleteTask(token, taskId) {
+    const connectDb = new DataModel();
+    const decodeToken = JWTMethods.decodeToken(token);
+    const remove = connectDb.deleteTask(decodeToken.id, taskId);
+
+    return remove;
+  }
 }
 
 export default DataService;

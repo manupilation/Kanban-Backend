@@ -46,6 +46,17 @@ class DataModel {
 
     return add;
   }
+
+  async deleteTask(id, taskId) {
+    const add = await User.findOneAndUpdate(
+      { _id: id },
+      { $pull: { tasks: { _id: taskId } } },
+    );
+
+    add.save();
+
+    return add;
+  }
 }
 
 export default DataModel;

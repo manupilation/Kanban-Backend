@@ -48,6 +48,15 @@ class DataController {
 
     res.status(201).json(add);
   }
+
+  async deleteTask(req, res) {
+    const { authorization } = req.headers;
+    const { taskId } = req.body;
+    const connectDb = new DataService();
+    const remove = connectDb.deleteTask(authorization, taskId);
+
+    res.status(201).json(remove);
+  }
 }
 
 export default DataController;
