@@ -4,10 +4,10 @@ function defineErrorStatus(name) {
   switch (name) {
   case "badRequest":
     return 400;
-  case "invalidInput":
-    return 422;
   case "Unauthorized":
     return 401;
+  case "invalidInput":
+    return 422;
   default:
     return 500;
   }
@@ -20,7 +20,6 @@ function handlerRouteError(err, _req, res, next) {
   }
 
   const status = defineErrorStatus(err.name);
-  console.log(status);
 
   res.status(status).json({ error: err.message });
 }
