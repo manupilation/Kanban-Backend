@@ -11,7 +11,10 @@ const userSchema = Joi.object({
     "string.min": "Password must be longer than 7 characters",
     "any.required": "Password is required",
   }),
-  email: Joi.string().required().messages({
+  email: Joi.string().required().email({
+    maxDomainSegments: 3, tlds: { allow: ["com", "net", "org"] }
+  }).messages({
+    "string.email": "Invalid email",
     "string.base": "Invalid email",
     "any.required": "Email is required",
   }),
