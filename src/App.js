@@ -2,6 +2,7 @@ import express from "express";
 import connector from "./database/connection.js";
 import dataRouter from "./routes/dataRouter.js";
 import bodyParser from "body-parser";
+import handlerRouteError from "./controllers/middlewares/erros.js";
 
 class App {
   constructor() {
@@ -9,6 +10,7 @@ class App {
     this.db = connector().catch(err => console.error(err));
     this.app.use(bodyParser.json());
     this.routes();
+    this.catchErrors();
   }
 
   start(port) {
@@ -18,7 +20,11 @@ class App {
   }
 
   routes() {
-    this.app.use("", dataRouter);
+    this.app.use("/", dataRouter);
+  }
+
+  catchErrors() {
+    this.app.use(handlerRouteError);
   }
 }
 
