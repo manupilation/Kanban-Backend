@@ -65,6 +65,15 @@ class DataController {
 
     res.status(201).json(remove);
   }
+
+  async updateTask(req, res) {
+    const { authorization } = req.headers;
+    const task  = req.body;
+    const connectDb = new DataService();
+    const update = connectDb.updateTask(authorization, task);
+
+    res.status(201).json(update);
+  }
 }
 
 export default DataController;

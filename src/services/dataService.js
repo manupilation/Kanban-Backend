@@ -67,7 +67,16 @@ class DataService {
   async deleteTask(token, taskId) {
     const connectDb = new DataModel();
     const decodeToken = JWTMethods.decodeToken(token);
-    const remove = connectDb.deleteTask(decodeToken.id, taskId);
+    const remove = await connectDb.deleteTask(decodeToken.id, taskId);
+
+    return remove;
+  }
+
+  async updateTask(token, { task, date, status, _id}) {
+    const connectDb = new DataModel();
+    const decodeToken = JWTMethods.decodeToken(token);
+
+    const remove = await connectDb.updateTask(decodeToken.id, {task, date, status}, _id);
 
     return remove;
   }
