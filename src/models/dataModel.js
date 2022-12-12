@@ -61,6 +61,18 @@ class DataModel {
 
     return add;
   }
+
+  async updateTask(id, taskUpd) {
+    const add = await User.findOneAndUpdate(
+      { _id: id },
+      taskUpd,
+      { overwrite: true }
+    );
+
+    add.save();
+
+    return add;
+  }
 }
 
 export default DataModel;
