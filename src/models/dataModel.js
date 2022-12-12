@@ -39,39 +39,41 @@ class DataModel {
   async addTask(id, task) {
     const add = await User.findOneAndUpdate(
       { _id: id },
-      { $push: { tasks: task} },
+      { $push: { tasks: task } },
+      { returnDocument: "after" }
     );
 
     add.save();
 
-    return {
-      taskId: add._id,
-      user: add.user,
-      tasks: task,
-    };
+    return add;
   }
 
   async deleteTask(id, taskId) {
-    const add = await User.findOneAndUpdate(
+    const del = await User.findOneAndUpdate(
       { _id: id },
       { $pull: { tasks: { _id: taskId } } },
     );
 
-    add.save();
+    del.save();
 
-    return add;
+    return del;
   }
 
-  async updateTask(id, taskUpd) {
-    const add = await User.findOneAndUpdate(
-      { _id: id },
-      taskUpd,
-      { overwrite: true }
+  async updateTask(id, taskUpd, _id) {
+    const upd = await User.findOneAndUpdate(
+      {"tasks._id": _id},
+      {
+        $set: {
+          "tasks.$.task": taskUpd.task,
+          "tasks.$.date": taskUpd.date,
+          "tasks.$.status": taskUpd.status,
+        }
+      }
     );
 
-    add.save();
+    upd.save();
 
-    return add;
+    return upd;
   }
 }
 
