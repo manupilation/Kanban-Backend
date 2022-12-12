@@ -9,10 +9,10 @@ import taskSchema from "../controllers/joi/task.js";
 class DataService {
   async setUser({user, email, password, tasks}) {
     const setData = new DataModel();
-    const hashPassword = await BCryptParse.hashPassword(password);
-
+    
     try {
       validationSchema(userSchema, {user, email, password});
+      const hashPassword = await BCryptParse.hashPassword(password);
       const data = await setData.setUser({user, email, password: hashPassword, tasks});
 
       return data;

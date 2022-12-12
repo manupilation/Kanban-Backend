@@ -44,7 +44,11 @@ class DataModel {
 
     add.save();
 
-    return add;
+    return {
+      taskId: add._id,
+      user: add.user,
+      tasks: task,
+    };
   }
 
   async deleteTask(id, taskId) {
