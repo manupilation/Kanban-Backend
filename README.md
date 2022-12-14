@@ -15,10 +15,11 @@
 
 Para que o projeto funcione sem problemas, você precisa ter:
 
-- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-- [Git](https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Instalando-o-Git)
-- [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) ou [Yarn](https://yarnpkg.com/getting-started/install)
-- [mongoDb](https://www.mongodb.com/docs/manual/administration/install-on-linux/)
+- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm);
+- [Git](https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Instalando-o-Git);
+- [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) ou [Yarn](https://yarnpkg.com/getting-started/install);
+- [mongoDb](https://www.mongodb.com/docs/manual/administration/install-on-linux/);
+- Algum API Client ([Insomnia](https://insomnia.rest/), [Postman](https://www.postman.com/));
 
 Use algum programa shell (ou linha de comando) para criar um novo diretório em sua máquina:
 ```
