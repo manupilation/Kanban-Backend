@@ -2,13 +2,40 @@
 
 # Sumário
 
+- [Pré-requisitos](#pré-requisitos)
 - [Como funciona este projeto](#explicações-gerais)
 - [Como rodar o projeto](#como-rodar-o-projeto)
-  - [Rodando manualmente](#manual)
-  - [Rodando através do Docker](#dockerized)
+  - [Rode manualmente](#manual)
+  - [Rode através do Docker](#dockerized)
 - [Testes e verificações](#testes-e-verificações)
-  - [Rodando o lint (Futura pipeline)](#usando-o-lint)
-  - [Rodando os testes de integração](#testes-de-integracao)
+  - [Avalie o lint (Futura pipeline)](#usando-o-lint)
+  - [Testes de integração](#testes-de-integração)
+  
+# Pré-requisitos
+
+Para que o projeto funcione sem problemas, você precisa ter:
+
+- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Git](https://git-scm.com/book/pt-br/v2/Come%C3%A7ando-Instalando-o-Git)
+- [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) ou [Yarn](https://yarnpkg.com/getting-started/install)
+- [mongoDb](https://www.mongodb.com/docs/manual/administration/install-on-linux/)
+
+Use algum programa shell (ou linha de comando) para criar um novo diretório em sua máquina:
+```
+mkdir kanbanScheduler
+```
+
+Navegue para dentro deste diretório e realize o clone do repositório:
+
+```
+cd kanbanScheduler
+```
+
+```
+git clone git@github.com:manupilation/Kanban-Backend.git
+```
+
+
 
 # Explicações gerais
 
@@ -25,6 +52,7 @@ As stacks utilizadas nele são:
 A Api conta com as seguintes rotas:
 
 - Post /register
+  - http://localhost:3001/register
   - O melhor caminho para começar. Registre-se aqui com um email, senha e nome de usuário
 
   ```
@@ -36,6 +64,7 @@ A Api conta com as seguintes rotas:
   ```
 
 - Post /login
+  - http://localhost:3001/login
   - Rota usada para logar no sistema. Retorna um token JWT. A senha estará segura e encriptada aqui!
 
   ```
@@ -46,9 +75,12 @@ A Api conta com as seguintes rotas:
   ```
 
 - Get /get
-  - Esta rota busca os dados de algum usuário registrado. É necessário o uso do token JWT no header "authorization";
+  - http://localhost:3001/get
+  - Esta rota busca os dados de algum usuário registrado. É necessário o uso do token JWT no header "authorization"; Um token é gerado no login.
+ 
 
 - PUT /setTask
+  - http://localhost:3001/setTask
   - Aqui, o usuário registra sua tarefa, a data que a começou e o seu status de andamento
   ```
   {
@@ -59,6 +91,7 @@ A Api conta com as seguintes rotas:
   ```
 
 - PUT /updateTask
+  - http://localhost:3001/updateTask
   - Aqui, o usuário atualiza ou modifica sua tarefa. É necessário informar o _id da tarefa que modificaremos.
   ```
   {
@@ -69,7 +102,8 @@ A Api conta com as seguintes rotas:
   }
   ```
 
-- DEL /delTask
+- DELETE /delTask
+  - http://localhost:3001/delTask
   - A task é apagada da lista! Basta apenas informar o ID da task.
   ```
   {
