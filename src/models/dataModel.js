@@ -52,6 +52,7 @@ class DataModel {
     const del = await User.findOneAndUpdate(
       { _id: id },
       { $pull: { tasks: { _id: taskId } } },
+      { returnDocument: "after" }
     );
 
     del.save();
@@ -68,7 +69,7 @@ class DataModel {
           "tasks.$.date": taskUpd.date,
           "tasks.$.status": taskUpd.status,
         }
-      }
+      }, { returnDocument: "after" }
     );
 
     upd.save();

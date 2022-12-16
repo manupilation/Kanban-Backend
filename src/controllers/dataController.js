@@ -61,7 +61,7 @@ class DataController {
     const { authorization } = req.headers;
     const { taskId } = req.body;
     const connectDb = new DataService();
-    const remove = connectDb.deleteTask(authorization, taskId);
+    const remove = await connectDb.deleteTask(authorization, taskId);
 
     res.status(201).json(remove);
   }
@@ -70,7 +70,7 @@ class DataController {
     const { authorization } = req.headers;
     const task  = req.body;
     const connectDb = new DataService();
-    const update = connectDb.updateTask(authorization, task);
+    const update = await connectDb.updateTask(authorization, task);
 
     res.status(201).json(update);
   }
