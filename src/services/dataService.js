@@ -5,6 +5,7 @@ import userSchema from "../controllers/joi/dataUser.js";
 import { loginErrorPassword } from "../utils/loginError.js";
 import JWTMethods from "../utils/jwt.js";
 import taskSchema from "../controllers/joi/task.js";
+import loginSchema from "../controllers/joi/login.js";
 
 class DataService {
   async setUser({user, email, password, tasks}) {
@@ -32,6 +33,7 @@ class DataService {
 
   async login({ password, email }) {
     try {
+      validationSchema(loginSchema, { email, password });
       const acessDb = new DataModel();
       const { password: dbPass, email: dbEmail, user, id } = await acessDb.login(email);
       const compare = await BCryptParse.comparePassword(password, dbPass);
