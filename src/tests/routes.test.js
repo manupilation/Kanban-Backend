@@ -84,6 +84,56 @@ describe("Testes de integração das rotas", () => {
       expect(response.body).to.contain.keys("token");
       expect(response.status).to.eq(200);
     });
+
+    it("Em um login sem email", async () => {
+      const response = await chai.request(app)
+        .post("/login")
+        .set("Content-Type", "application/json")
+        .send({
+          password: "Gasparzito",
+        });
+
+      expect(response.status).to.eq(422);
+      expect(response.body.error).to.be.eq("Email is required");
+    });
+
+    it("Em um login sem senha", async () => {
+      const response = await chai.request(app)
+        .post("/login")
+        .set("Content-Type", "application/json")
+        .send({
+          email: "gaspar@gaspar.com",
+        });
+
+      expect(response.status).to.eq(422);
+      expect(response.body.error).to.be.eq("Password is required");
+    });
+
+    it("Em um login de email não cadastrado", async () => {
+      const response = await chai.request(app)
+        .post("/login")
+        .set("Content-Type", "application/json")
+        .send({
+          email: "gespar@gaspar.com",
+          password: "Gasparzito",
+        });
+
+      expect(response.status).to.eq(401);
+      expect(response.body.error).to.be.eq("Email ou senha inválidos!");
+    });
+
+    it("Em um login de senha incorreta", async () => {
+      const response = await chai.request(app)
+        .post("/login")
+        .set("Content-Type", "application/json")
+        .send({
+          email: "gaspar@gaspar.com",
+          password: "Gasperzito",
+        });
+
+      expect(response.status).to.eq(401);
+      expect(response.body.error).to.be.eq("Email ou senha inválidos!");
+    });
   });
 
   describe("Testa a rota /get", () => {
