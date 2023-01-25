@@ -28,6 +28,8 @@ class DataModel {
   async login(email) {
     const data = await User.findOne({ email });
 
+    if (data === null) return null;
+
     return {
       user: data.user,
       id: data._id.toString(),
