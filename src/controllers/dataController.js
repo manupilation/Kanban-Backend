@@ -33,7 +33,8 @@ class DataController {
 
   async login(req, res, next) {
     try {
-      const connect = await new DataService().login(req.body);
+      const { email, password } = req.body;
+      const connect = await new DataService().login({email, password});
 
       res.status(200).json({ token: connect });
     } catch(err) {
