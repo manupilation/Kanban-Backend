@@ -35,7 +35,12 @@ class DataService {
     try {
       validationSchema(loginSchema, { email, password });
       const acessDb = new DataModel();
-      const { password: dbPass, email: dbEmail, user, id } = await acessDb.login(email);
+      const tryLogin = await acessDb.login(email);
+      if(tryLogin === null) {
+        loginErrorPassword();
+      }
+
+      const { password: dbPass, email: dbEmail, user, id } = tryLogin;
       const compare = await BCryptParse.comparePassword(password, dbPass);
 
       if(compare == false) {
