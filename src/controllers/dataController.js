@@ -1,5 +1,4 @@
 import DataService from "../services/dataService.js";
-import { authorizationError } from "../utils/authError.js";
 
 class DataController {
   async setUser(req, res, next) {
@@ -19,9 +18,6 @@ class DataController {
   async getData(req, res, next) {
     try {
       const authToken = req.headers.authorization;
-      if(!authToken) {
-        authorizationError();
-      }
   
       const dbdata = await new DataService().getData(authToken);
   
@@ -45,10 +41,6 @@ class DataController {
   async addTask(req, res, next) {
     try {
       const { authorization } = req.headers;
-
-      if(!authorization) {
-        authorizationError();
-      }
       const connectDb = new DataService();
       const add = await connectDb.addTask(authorization, req.body);
 
