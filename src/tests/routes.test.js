@@ -93,7 +93,7 @@ describe("Testes de integração das rotas", () => {
           password: "Gasparzito",
         });
 
-      expect(response.status).to.eq(422);
+      expect(response.status).to.eq(400);
       expect(response.body.error).to.be.eq("Email is required");
     });
 
@@ -105,7 +105,7 @@ describe("Testes de integração das rotas", () => {
           email: "gaspar@gaspar.com",
         });
 
-      expect(response.status).to.eq(422);
+      expect(response.status).to.eq(400);
       expect(response.body.error).to.be.eq("Password is required");
     });
 
