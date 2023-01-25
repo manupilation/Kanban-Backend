@@ -2,15 +2,18 @@
 /* eslint-disable no-undef */
 import chai from "chai";
 import chaiHttp from "chai-http";
+import { response } from "express";
 import Sinon from "sinon";
 import { app } from "../App.js";
 const expect = chai.expect;
 
+const EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTZiODRjYTEzMDczMmY3OGExYjE1ZCIsInVzZXIiOiJXaWxsIiwiZW1haWwiOiJXaWxsQHdpbGwuY29tIiwiaWF0IjoxNjcxMDUyMTY3LCJleHAiOjE2NzEwNzAxNjd9.dHuUuBukBXDOPpBjFdeHNZCkox5rB_suW4U6YhtT0ME";
+
 chai.use(chaiHttp);
 
-describe("Testes de integração das rotas", () => {
-  describe("Testa a rota /register", () => {
-    it("Em uma requisição correta", async () => {
+describe("Testes de integração das rotas:", () => {
+  describe("Testa a rota /register:", () => {
+    it("Em uma requisição correta:", async () => {
       const response = await chai.request(app)
         .post("/register")
         .set("Content-Type", "application/json")
@@ -29,7 +32,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.status).to.be.eq(201);
     });
 
-    it("Em uma requisição sem user", async () => {
+    it("Em uma requisição sem user:", async () => {
       const response = await chai.request(app)
         .post("/register")
         .set("Content-Type", "application/json")
@@ -42,7 +45,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.status).to.be.eq(400);
     });
 
-    it("Em uma requisição sem password", async () => {
+    it("Em uma requisição sem password:", async () => {
       const response = await chai.request(app)
         .post("/register")
         .set("Content-Type", "application/json")
@@ -55,7 +58,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.status).to.be.eq(400);
     });
 
-    it("Em uma requisição sem email", async () => {
+    it("Em uma requisição sem email:", async () => {
       const response = await chai.request(app)
         .post("/register")
         .set("Content-Type", "application/json")
@@ -71,8 +74,8 @@ describe("Testes de integração das rotas", () => {
 
   
 
-  describe("Testa a rota /login", () => {
-    it("Em um login correto", async() => {
+  describe("Testa a rota /login:", () => {
+    it("Em um login correto:", async() => {
       const response = await chai.request(app)
         .post("/login")
         .set("Content-Type", "application/json")
@@ -85,7 +88,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.status).to.eq(200);
     });
 
-    it("Em um login sem email", async () => {
+    it("Em um login sem email:", async () => {
       const response = await chai.request(app)
         .post("/login")
         .set("Content-Type", "application/json")
@@ -97,7 +100,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.body.error).to.be.eq("Email is required");
     });
 
-    it("Em um login sem senha", async () => {
+    it("Em um login sem senha:", async () => {
       const response = await chai.request(app)
         .post("/login")
         .set("Content-Type", "application/json")
@@ -109,7 +112,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.body.error).to.be.eq("Password is required");
     });
 
-    it("Em um login de email não cadastrado", async () => {
+    it("Em um login de email não cadastrado:", async () => {
       const response = await chai.request(app)
         .post("/login")
         .set("Content-Type", "application/json")
@@ -122,7 +125,7 @@ describe("Testes de integração das rotas", () => {
       expect(response.body.error).to.be.eq("Email ou senha inválidos!");
     });
 
-    it("Em um login de senha incorreta", async () => {
+    it("Em um login de senha incorreta:", async () => {
       const response = await chai.request(app)
         .post("/login")
         .set("Content-Type", "application/json")
@@ -136,8 +139,8 @@ describe("Testes de integração das rotas", () => {
     });
   });
 
-  describe("Testa a rota /get", () => {
-    it("Em uma requisição adequada", async() => {
+  describe("Testa a rota /get:", () => {
+    it("Em uma requisição adequada:", async() => {
       const getToken = await chai.request(app)
         .post("/login")
         .set("Content-Type", "application/json")
@@ -154,5 +157,24 @@ describe("Testes de integração das rotas", () => {
       expect(response.status).to.eq(200);
       expect(response.body).to.contain.keys("user", "id", "tasks");
     });
+
+    it("Em uma requisição de token inválido:", async() => {
+      const response = await chai.request(app)
+        .get("/get")
+        .set("Content-Type", "application/json")
+        .set("authorization", "FAKEAUTHORIZATION");
+
+      expect(response.body.error).to.eq("Token Inválido!");
+    });
+
+    it("Em uma requisição de token expirado:", async() => {
+      const response = await chai.request(app)
+        .get("/get")
+        .set("Content-Type", "application/json")
+        .set("authorization", EXPIRED_TOKEN);
+
+      expect(response.body.error).to.eq("Token expirado!");
+    });
+    
   });
 });
