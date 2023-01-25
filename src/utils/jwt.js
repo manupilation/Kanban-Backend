@@ -15,8 +15,13 @@ export default class JWTMethods {
   }
 
   static verifyToken(token) {
-    const verifying = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
-    return verifying;
+
+    try {
+      const verifying = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
+      return verifying;
+    } catch(err) {
+      return null;
+    }
   }
 
   static decodeToken(token) {
