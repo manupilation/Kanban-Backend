@@ -6,6 +6,7 @@ import { loginErrorPassword } from "../utils/loginError.js";
 import JWTMethods from "../utils/jwt.js";
 import taskSchema from "../controllers/joi/task.js";
 import loginSchema from "../controllers/joi/login.js";
+import AuthorizationHandler from "../utils/authorizationErrors.js";
 
 class DataService {
   async setUser({user, email, password, tasks}) {
@@ -25,7 +26,19 @@ class DataService {
 
   async getData(token) {
     const dbdata = new DataModel();
+
+    const verifyToken = JWTMethods.verifyToken(token);
+
+    if (!verifyToken) {
+      throw new AuthorizationHandler("expired");
+    }
+
     const decodeToken = JWTMethods.decodeToken(token);
+
+    if(!decodeToken) {
+      throw new AuthorizationHandler();
+    }
+
     const data = await dbdata.getData(decodeToken.id);
 
     return data;
