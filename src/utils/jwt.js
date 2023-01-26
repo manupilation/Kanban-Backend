@@ -18,9 +18,10 @@ export default class JWTMethods {
 
     try {
       const verifying = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
-      return verifying;
+      return [true ,verifying];
     } catch(err) {
-      return null;
+      if (err.message == "jwt expired") return [null, "expired"];
+      return [null, "malformed"];
     }
   }
 
