@@ -26,21 +26,14 @@ class DataService {
 
   async getData(token) {
     const dbdata = new DataModel();
-
     const verifyToken = JWTMethods.verifyToken(token);
 
-    if (!verifyToken) {
-      throw new AuthorizationHandler("expired");
+    if (!verifyToken[0]) {
+      throw new AuthorizationHandler(verifyToken[1]);
     }
 
     const decodeToken = JWTMethods.decodeToken(token);
-
-    if(!decodeToken) {
-      throw new AuthorizationHandler();
-    }
-
     const data = await dbdata.getData(decodeToken.id);
-
     return data;
   }
 
