@@ -6,7 +6,7 @@ class AuthorizationHandler {
 
   formatInvalid() {
     this.error.name = "Unauthorized";
-    this.error.message = "Token Inválido!";
+    this.error.message = "Token inválido!";
   }
 
   formatExpired() {
