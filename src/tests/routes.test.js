@@ -164,7 +164,7 @@ describe("Testes de integração das rotas:", () => {
         .set("Content-Type", "application/json")
         .set("authorization", "FAKEAUTHORIZATION");
 
-      expect(response.body.error).to.eq("Token Inválido!");
+      expect(response.body.error).to.eq("Token inválido!");
     });
 
     it("Em uma requisição de token expirado:", async() => {
