@@ -5,6 +5,7 @@ import chaiHttp from "chai-http";
 import { response } from "express";
 import Sinon from "sinon";
 import { app } from "../App.js";
+import { RestartDb } from "./utils.js";
 const expect = chai.expect;
 
 const EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTZiODRjYTEzMDczMmY3OGExYjE1ZCIsInVzZXIiOiJXaWxsIiwiZW1haWwiOiJXaWxsQHdpbGwuY29tIiwiaWF0IjoxNjcxMDUyMTY3LCJleHAiOjE2NzEwNzAxNjd9.dHuUuBukBXDOPpBjFdeHNZCkox5rB_suW4U6YhtT0ME";
@@ -176,5 +177,34 @@ describe("Testes de integração das rotas:", () => {
       expect(response.body.error).to.eq("Token expirado!");
     });
     
+  });
+
+  describe("Testes da rota /setTask:", () => {
+    it("Em uma requisição correta:", async () => {
+      const login = await chai.request(app)
+        .post("/login")
+        .set("Content-Type", "application/json")
+        .send({
+          email: "gaspar@gaspar.com",
+          password: "Gasparzito",
+        });
+
+      const request = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", login.body.token)
+        .send({
+          "task": "Make a great sandwich",
+          "status": "done",
+          "date": "2022-12-12"
+        });
+
+      expect(request.status).to.eq(201);
+      expect(request.body.tasks[0]).to.have.keys(["task", "date", "status", "_id"]);
+    });
+  });
+
+  after(() => {
+    RestartDb();
   });
 });
