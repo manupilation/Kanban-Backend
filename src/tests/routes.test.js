@@ -12,6 +12,25 @@ const EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTZiODRj
 
 chai.use(chaiHttp);
 
+async function quickLogin() {
+  await chai.request(app)
+    .post("/register")
+    .set("Content-Type", "application/json")
+    .send({
+      user: "Mirio",
+      password: "Miriozito",
+      email: "mirio@mirio.com"
+    });
+  const login = await chai.request(app)
+    .post("/login")
+    .set("Content-Type", "application/json")
+    .send({
+      email: "mirio@mirio.com",
+      password: "Miriozito",
+    });
+  return login.body.token;
+}
+
 describe("Testes de integração das rotas:", () => {
   describe("Testa a rota /register:", () => {
     it("Em uma requisição correta:", async () => {
@@ -181,18 +200,10 @@ describe("Testes de integração das rotas:", () => {
 
   describe("Testes da rota /setTask:", () => {
     it("Em uma requisição correta:", async () => {
-      const login = await chai.request(app)
-        .post("/login")
-        .set("Content-Type", "application/json")
-        .send({
-          email: "gaspar@gaspar.com",
-          password: "Gasparzito",
-        });
-
       const request = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", login.body.token)
+        .set("authorization", await quickLogin())
         .send({
           "task": "Make a great sandwich",
           "status": "done",
@@ -201,6 +212,45 @@ describe("Testes de integração das rotas:", () => {
 
       expect(request.status).to.eq(201);
       expect(request.body.tasks[0]).to.have.keys(["task", "date", "status", "_id"]);
+    });
+
+    it("Testa a requisição sem o campo TASK", async () => {
+      const addWithoutTask = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", await quickLogin())
+        .send({
+          "status": "done",
+          "date": "2022-12-12"
+        });
+
+      expect(addWithoutTask.body.error).to.eq("Task is required");
+    });
+
+    it("Testa a requisição sem o campo TASK", async () => {
+      const addWithoutStatus = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", await quickLogin())
+        .send({
+          "task": "Bend the space-time",
+          "date": "2022-12-12"
+        });
+
+      expect(addWithoutStatus.body.error).to.eq("Status is required");
+    });
+
+    it("Testa a requisição sem o campo TASK", async () => {
+      const addWithoutDate = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", await quickLogin())
+        .send({
+          "task": "Bend the space-time",
+          "status": "pending",
+        });
+
+      expect(addWithoutDate.body.error).to.eq("Date is required");
     });
   });
 
