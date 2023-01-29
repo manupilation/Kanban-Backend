@@ -37,8 +37,11 @@ async function quickLogin() {
 }
 
 describe("Testes de integração das rotas:", () => {
+  let validToken;
+
   before(async () => {
     await quickRegister();
+    validToken = await quickLogin();
   });
 
   describe("Testa a rota /register:", () => {
@@ -213,7 +216,7 @@ describe("Testes de integração das rotas:", () => {
       const request = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", await quickLogin())
+        .set("authorization", validToken)
         .send({
           "task": "Make a great sandwich",
           "status": "done",
@@ -228,7 +231,7 @@ describe("Testes de integração das rotas:", () => {
       const addWithoutTask = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", await quickLogin())
+        .set("authorization", validToken)
         .send({
           "status": "done",
           "date": "2022-12-12"
@@ -241,7 +244,7 @@ describe("Testes de integração das rotas:", () => {
       const request = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", await quickLogin())
+        .set("authorization", validToken)
         .send({
           "task": "M",
           "status": "done",
@@ -256,7 +259,7 @@ describe("Testes de integração das rotas:", () => {
       const request = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", await quickLogin())
+        .set("authorization", validToken)
         .send({
           "task": 123456,
           "status": "done",
@@ -271,7 +274,7 @@ describe("Testes de integração das rotas:", () => {
       const addWithoutStatus = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", await quickLogin())
+        .set("authorization", validToken)
         .send({
           "task": "Bend the space-time",
           "date": "2022-12-12"
@@ -284,7 +287,7 @@ describe("Testes de integração das rotas:", () => {
       const addWithoutDate = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
-        .set("authorization", await quickLogin())
+        .set("authorization", validToken)
         .send({
           "task": "Bend the space-time",
           "status": "pending",
