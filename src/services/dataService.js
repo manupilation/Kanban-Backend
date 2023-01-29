@@ -68,6 +68,11 @@ class DataService {
     const decodeToken = JWTMethods.decodeToken(token);
     try {
       validationSchema(taskSchema, body);
+      const verifyToken = JWTMethods.verifyToken(token);
+
+      if (!verifyToken[0]) {
+        throw new AuthorizationHandler(verifyToken[1]);
+      }
       const add = await connectDb.addTask(decodeToken.id, body);
 
       return add;
