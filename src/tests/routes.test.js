@@ -236,6 +236,36 @@ describe("Testes de integração das rotas:", () => {
       expect(addWithoutTask.body.error).to.eq("Task is required");
     });
 
+    it("Em uma requisição com task insuficiente:", async () => {
+      const request = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", await quickLogin())
+        .send({
+          "task": "M",
+          "status": "done",
+          "date": "2022-12-12"
+        });
+
+      expect(request.status).to.eq(422);
+      expect(request.body.error).to.eq("Task must be longer than 5 characters");
+    });
+
+    it("Em uma requisição com task de tipo errado:", async () => {
+      const request = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", await quickLogin())
+        .send({
+          "task": 123456,
+          "status": "done",
+          "date": "2022-12-12"
+        });
+
+      expect(request.status).to.eq(422);
+      expect(request.body.error).to.eq("Task must be a string");
+    });
+
     it("Testa a requisição sem o campo Status", async () => {
       const addWithoutStatus = await chai.request(app)
         .put("/setTask")
