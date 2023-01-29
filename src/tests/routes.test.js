@@ -37,6 +37,10 @@ async function quickLogin() {
 }
 
 describe("Testes de integração das rotas:", () => {
+  before(async () => {
+    await quickRegister();
+  });
+
   describe("Testa a rota /register:", () => {
     it("Em uma requisição correta:", async () => {
       const response = await chai.request(app)
@@ -204,9 +208,6 @@ describe("Testes de integração das rotas:", () => {
   });
 
   describe("Testes da rota /setTask:", () => {
-    before(async () => {
-      await quickRegister();
-    });
 
     it("Em uma requisição correta:", async () => {
       const request = await chai.request(app)
