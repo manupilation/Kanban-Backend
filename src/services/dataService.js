@@ -5,6 +5,8 @@ import userSchema from "../controllers/joi/dataUser.js";
 import { loginErrorPassword } from "../utils/loginError.js";
 import JWTMethods from "../utils/jwt.js";
 import taskSchema from "../controllers/joi/task.js";
+import loginSchema from "../controllers/joi/login.js";
+import AuthorizationHandler from "../utils/authorizationErrors.js";
 
 class DataService {
   async setUser({user, email, password, tasks}) {
@@ -24,16 +26,27 @@ class DataService {
 
   async getData(token) {
     const dbdata = new DataModel();
+    const verifyToken = JWTMethods.verifyToken(token);
+
+    if (!verifyToken[0]) {
+      throw new AuthorizationHandler(verifyToken[1]);
+    }
+
     const decodeToken = JWTMethods.decodeToken(token);
     const data = await dbdata.getData(decodeToken.id);
-
     return data;
   }
 
   async login({ password, email }) {
     try {
+      validationSchema(loginSchema, { email, password });
       const acessDb = new DataModel();
-      const { password: dbPass, email: dbEmail, user, id } = await acessDb.login(email);
+      const tryLogin = await acessDb.login(email);
+      if(tryLogin === null) {
+        loginErrorPassword();
+      }
+
+      const { password: dbPass, email: dbEmail, user, id } = tryLogin;
       const compare = await BCryptParse.comparePassword(password, dbPass);
 
       if(compare == false) {
@@ -55,6 +68,11 @@ class DataService {
     const decodeToken = JWTMethods.decodeToken(token);
     try {
       validationSchema(taskSchema, body);
+      const verifyToken = JWTMethods.verifyToken(token);
+
+      if (!verifyToken[0]) {
+        throw new AuthorizationHandler(verifyToken[1]);
+      }
       const add = await connectDb.addTask(decodeToken.id, body);
 
       return add;
