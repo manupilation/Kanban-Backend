@@ -12,8 +12,8 @@ const EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTZiODRj
 
 chai.use(chaiHttp);
 
-async function quickLogin() {
-  await chai.request(app)
+async function quickRegister() {
+  const register = await chai.request(app)
     .post("/register")
     .set("Content-Type", "application/json")
     .send({
@@ -21,6 +21,11 @@ async function quickLogin() {
       password: "Miriozito",
       email: "mirio@mirio.com"
     });
+  
+  return register;
+}
+
+async function quickLogin() {
   const login = await chai.request(app)
     .post("/login")
     .set("Content-Type", "application/json")
@@ -199,6 +204,10 @@ describe("Testes de integração das rotas:", () => {
   });
 
   describe("Testes da rota /setTask:", () => {
+    before(async () => {
+      await quickRegister();
+    });
+
     it("Em uma requisição correta:", async () => {
       const request = await chai.request(app)
         .put("/setTask")
@@ -251,6 +260,34 @@ describe("Testes de integração das rotas:", () => {
         });
 
       expect(addWithoutDate.body.error).to.eq("Date is required");
+    });
+
+    it("Testa a requisição sem token de validação", async () => {
+      const addWithoutDate = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", "INVALID")
+        .send({
+          "task": "Bend the space-time",
+          "status": "pending",
+          "date": "2022-12-12"
+        });
+
+      expect(addWithoutDate.body.error).to.eq("Token inválido!");
+    });
+
+    it("Testa a requisição sem token de validação", async () => {
+      const addWithoutDate = await chai.request(app)
+        .put("/setTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", EXPIRED_TOKEN)
+        .send({
+          "task": "Bend the space-time",
+          "status": "pending",
+          "date": "2022-12-12"
+        });
+
+      expect(addWithoutDate.body.error).to.eq("Token expirado!");
     });
   });
 
