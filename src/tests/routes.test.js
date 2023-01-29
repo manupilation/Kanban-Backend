@@ -36,12 +36,28 @@ async function quickLogin() {
   return login.body.token;
 }
 
+async function quickListTasks(token) {
+  const getOneTask = await chai.request(app)
+    .put("/setTask")
+    .set("Content-Type", "application/json")
+    .set("authorization", token)
+    .send({
+      "task": "Save the world!",
+      "status": "pending",
+      "date": "2023-10-09"
+    });
+
+  return getOneTask.body.tasks;
+}
+
 describe("Testes de integração das rotas:", () => {
   let validToken;
+  let listOfTasks;
 
   before(async () => {
     await quickRegister();
     validToken = await quickLogin();
+    listOfTasks = await quickListTasks(validToken);
   });
 
   describe("Testa a rota /register:", () => {
@@ -322,6 +338,29 @@ describe("Testes de integração das rotas:", () => {
         });
 
       expect(addWithoutDate.body.error).to.eq("Token expirado!");
+    });
+  });
+
+  describe("Testes da rota /updateTask:", () => {
+    it("Em uma requisição correta:", async () => {
+
+      const updateTask = await chai.request(app)
+        .put("/updateTask")
+        .set("Content-Type", "application/json")
+        .set("authorization", validToken)
+        .send({
+          "task": "Save the world and eat bacon pancakes",
+          "status": "pending",
+          "date": "2023-02-07T00:00:00.000Z",
+          "_id": listOfTasks[0]._id
+        });
+
+      expect(updateTask.body.tasks[0]).to.be.deep.equal({
+        "task": "Save the world and eat bacon pancakes",
+        "status": "pending",
+        "date": "2023-02-07T00:00:00.000Z",
+        "_id": listOfTasks[0]._id
+      });
     });
   });
 
