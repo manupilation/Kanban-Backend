@@ -236,7 +236,7 @@ describe("Testes de integração das rotas:", () => {
       expect(addWithoutTask.body.error).to.eq("Task is required");
     });
 
-    it("Testa a requisição sem o campo TASK", async () => {
+    it("Testa a requisição sem o campo Status", async () => {
       const addWithoutStatus = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
@@ -249,7 +249,7 @@ describe("Testes de integração das rotas:", () => {
       expect(addWithoutStatus.body.error).to.eq("Status is required");
     });
 
-    it("Testa a requisição sem o campo TASK", async () => {
+    it("Testa a requisição sem o campo Date", async () => {
       const addWithoutDate = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
@@ -276,7 +276,7 @@ describe("Testes de integração das rotas:", () => {
       expect(addWithoutDate.body.error).to.eq("Token inválido!");
     });
 
-    it("Testa a requisição sem token de validação", async () => {
+    it("Testa a requisição com token expirado", async () => {
       const addWithoutDate = await chai.request(app)
         .put("/setTask")
         .set("Content-Type", "application/json")
